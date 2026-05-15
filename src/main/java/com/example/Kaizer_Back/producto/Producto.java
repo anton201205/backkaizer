@@ -36,7 +36,7 @@ public class Producto {
 	@Column(nullable = false, precision = 12, scale = 2)
 	private BigDecimal precio;
 
-	@Column(nullable = false, length = 500)
+	@Column(name = "image_url", nullable = false, length = 500)
 	private String imageUrl;
 
 	@Column(nullable = false)
