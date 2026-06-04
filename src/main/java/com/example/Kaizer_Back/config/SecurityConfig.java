@@ -31,6 +31,8 @@ public class SecurityConfig {
 						.requestMatchers("/api/auth/**").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll()
 						.requestMatchers(HttpMethod.POST, "/api/checkout").permitAll()
+						// RUC público para que el checkout pueda autocompletar datos de facturación sin login
+						.requestMatchers(HttpMethod.GET, "/api/consulta/ruc/**").permitAll()
 						.requestMatchers(HttpMethod.POST, "/api/productos/**").hasRole("ADMIN")
 						.anyRequest().authenticated()
 				)
