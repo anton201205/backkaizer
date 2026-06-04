@@ -23,7 +23,7 @@ public class SecurityConfig {
 	SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter)
 			throws Exception {
 		return http.csrf(AbstractHttpConfigurer::disable)
-				.cors(Customizer.withDefaults())
+				.cors(Customizer.withDefaults()) // Usa el bean CorsConfig definido en config/CorsConfig.java
 				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
@@ -36,7 +36,6 @@ public class SecurityConfig {
 						.requestMatchers(HttpMethod.POST, "/api/productos/**").hasRole("ADMIN")
 						.anyRequest().authenticated()
 				)
-				.cors(Customizer.withDefaults()) // Esto le dice a Spring Security: "Usa mi CorsConfig"
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
 	}

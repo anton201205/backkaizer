@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.Kaizer_Back.producto.dto.ProductoRequest;
@@ -18,6 +19,7 @@ public class ProductoService {
 		this.productoRepository = productoRepository;
 	}
 
+	@Transactional(rollbackFor = Exception.class)
 	public ProductoResponse crear(ProductoRequest request) {
 		Producto producto = Producto.builder()
 				.nombre(request.nombre())

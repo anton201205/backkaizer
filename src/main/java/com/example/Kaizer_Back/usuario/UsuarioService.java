@@ -22,6 +22,7 @@ public class UsuarioService {
 		this.passwordEncoder = passwordEncoder;
 	}
 
+	@Transactional(rollbackFor = Exception.class)
 	public Usuario registrar(String email, String password) {
 		if (usuarioRepository.existsByEmail(email)) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "Email ya registrado");
