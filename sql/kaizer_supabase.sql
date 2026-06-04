@@ -29,6 +29,8 @@ create table if not exists pedidos (
   id bigserial primary key,
   usuario_id bigint references usuarios(id) on delete set null,
   direccion_envio text,
+  nombre_comprador varchar(100),
+  telefono_comprador varchar(20),
   estado varchar(30) not null default 'CREADO',
   total numeric(12,2) not null default 0 check (total >= 0),
   created_at timestamptz not null default now()

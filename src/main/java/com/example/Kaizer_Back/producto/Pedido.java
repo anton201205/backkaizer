@@ -30,6 +30,14 @@ public class Pedido {
     @Column(name = "direccion_envio", columnDefinition = "TEXT")
     private String direccionEnvio;
 
+    // Snapshot del nombre y teléfono al momento de la compra para que los datos
+    // de facturación no cambien si el usuario actualiza su perfil después.
+    @Column(name = "nombre_comprador", length = 100)
+    private String nombreComprador;
+
+    @Column(name = "telefono_comprador", length = 20)
+    private String telefonoComprador;
+
     @Column(nullable = false, length = 30)
     private String estado;
 

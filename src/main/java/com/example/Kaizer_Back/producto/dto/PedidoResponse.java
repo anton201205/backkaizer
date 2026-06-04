@@ -11,6 +11,9 @@ public record PedidoResponse(
 		String estado,
 		BigDecimal total,
 		OffsetDateTime createdAt,
+		String direccionEnvio,
+		String nombreComprador,
+		String telefonoComprador,
 		List<PedidoItemResponse> items
 ) {
 	public static PedidoResponse from(Pedido p) {
@@ -19,6 +22,9 @@ public record PedidoResponse(
 				p.getEstado(),
 				p.getTotal(),
 				p.getCreatedAt(),
+				p.getDireccionEnvio(),
+				p.getNombreComprador(),
+				p.getTelefonoComprador(),
 				p.getItems().stream().map(PedidoItemResponse::from).toList()
 		);
 	}

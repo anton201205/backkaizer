@@ -14,6 +14,7 @@ import com.example.Kaizer_Back.producto.PedidoItem;
 import com.example.Kaizer_Back.producto.PedidoRepository;
 import com.example.Kaizer_Back.producto.Producto;
 import com.example.Kaizer_Back.producto.ProductoRepository;
+import com.example.Kaizer_Back.usuario.Usuario;
 import com.example.Kaizer_Back.usuario.UsuarioRepository;
 
 @Service
@@ -36,9 +37,23 @@ public class CheckoutService {
 		// Esto mitiga race conditions cuando múltiples compras intentan tomar el mismo stock.
 		Pedido pedido = Pedido.builder().estado("CREADO").build();
 
-		// getReferenceById crea un proxy sin consultar la BD, suficiente para persistir la FK.
 		if (userId != null) {
-			pedido.setUsuario(usuarioRepository.getReferenceById(userId));
+			// findById en lugar de getReferenceById porque necesitamos los datos del perfil
+			// para generar el snapshot de facturación (nombre, teléfono, dirección).
+			Usuario usuario = usuarioRepository.findById(userId)
+					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+
+			pedido.setUsuario(usuario);
+			pedido.setNombreComprador(usuario.getNombre());
+			pedido.setTelefonoComprador(usuario.getTelefono());
+
+			// Dirección: prioriza lo enviado en el request; si no viene, usa la del perfil.
+			String direccion = request.getDireccionEnvio() != null
+					? request.getDireccionEnvio()
+					: usuario.getDireccion();
+			pedido.setDireccionEnvio(direccion);
+		} else if (request.getDireccionEnvio() != null) {
+			pedido.setDireccionEnvio(request.getDireccionEnvio());
 		}
 
 		BigDecimal total = BigDecimal.ZERO;
