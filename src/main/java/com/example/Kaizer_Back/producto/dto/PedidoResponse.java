@@ -14,6 +14,7 @@ public record PedidoResponse(
 		String direccionEnvio,
 		String nombreComprador,
 		String telefonoComprador,
+		String emailComprador,
 		List<PedidoItemResponse> items
 ) {
 	public static PedidoResponse from(Pedido p) {
@@ -25,6 +26,7 @@ public record PedidoResponse(
 				p.getDireccionEnvio(),
 				p.getNombreComprador(),
 				p.getTelefonoComprador(),
+				p.getUsuario() != null ? p.getUsuario().getEmail() : null,
 				p.getItems().stream().map(PedidoItemResponse::from).toList()
 		);
 	}

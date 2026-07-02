@@ -12,5 +12,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 	// DISTINCT elimina duplicados de Pedido que JPQL genera al hacer JOIN con una colección.
 	@Query("SELECT DISTINCT p FROM Pedido p JOIN FETCH p.items i JOIN FETCH i.producto WHERE p.usuario.id = :usuarioId ORDER BY p.createdAt DESC")
 	List<Pedido> findByUsuarioIdWithItems(@Param("usuarioId") Long usuarioId);
+
+	@Query("SELECT DISTINCT p FROM Pedido p JOIN FETCH p.usuario JOIN FETCH p.items i JOIN FETCH i.producto ORDER BY p.createdAt DESC")
+	List<Pedido> findAllWithItems();
 }
 
