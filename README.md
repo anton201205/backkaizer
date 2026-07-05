@@ -127,10 +127,16 @@ src/
 
 ### Flujo JWT (stateless)
 
-1. **Registro/Login:** `POST /api/auth/register` o `/api/auth/login`
-   - Email + Password → valida con `AuthenticationManager` + `BCryptPasswordEncoder`
-   
-2. **Emisión de token:** `JwtService.generateToken()`
+1. **Registro:** `POST /api/auth/register`
+   - Request: `{ nombre, apellidos, email, password }`
+   - Valida con `AuthenticationManager` + `BCryptPasswordEncoder`
+   - Crea usuario con rol `USER` por defecto
+
+2. **Login:** `POST /api/auth/login`
+   - Request: `{ email, password }`
+   - Valida credenciales con `AuthenticationManager`
+
+3. **Emisión de token:** `JwtService.generateToken()`
    - JWT firmado con **HMAC-SHA**
    - Claims: `sub` (email), `uid` (id), `nombre`, `role`, `iat`, `exp`
    - Incrusta datos para evitar consultas redundantes a BD
@@ -158,8 +164,8 @@ Base URL: `https://kaizer-back-1.onrender.com`
 
 | Método | Ruta | Auth | Descripción |
 |---|---|---|---|
-| POST | `/api/auth/register` | Público | Registro; devuelve `{ token }` |
-| POST | `/api/auth/login` | Público | Login; devuelve `{ token }` |
+| POST | `/api/auth/register` | Público | Registro (nombre, apellidos, email, password); devuelve `{ token }` |
+| POST | `/api/auth/login` | Público | Login (email, password); devuelve `{ token }` |
 | GET | `/api/health` | Público | Health check / warm-up |
 | GET | `/api/productos` | Público | Lista de productos |
 | GET | `/api/productos/{id}` | Público | Detalle de producto |

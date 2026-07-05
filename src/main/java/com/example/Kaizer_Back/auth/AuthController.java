@@ -40,7 +40,7 @@ public class AuthController {
 	@PostMapping("/register")
 	@ResponseStatus(HttpStatus.CREATED)
 	public AuthResponse register(@Valid @RequestBody AuthRequest request) {
-		usuarioService.registrar(request.email(), request.password());
+		usuarioService.registrar(request.nombre(), request.apellidos(), request.email(), request.password());
 		UserDetails userDetails = usuarioDetailsService.loadUserByUsername(request.email());
 		return new AuthResponse(jwtService.generateToken(userDetails));
 	}

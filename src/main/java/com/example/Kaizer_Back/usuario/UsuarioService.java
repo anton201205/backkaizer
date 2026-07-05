@@ -23,12 +23,14 @@ public class UsuarioService {
 	}
 
 	@Transactional(rollbackFor = Exception.class)
-	public Usuario registrar(String email, String password) {
+	public Usuario registrar(String nombre, String apellidos, String email, String password) {
 		if (usuarioRepository.existsByEmail(email)) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "Email ya registrado");
 		}
 
 		Usuario usuario = Usuario.builder()
+				.nombre(nombre)
+				.apellidos(apellidos)
 				.email(email)
 				.passwordHash(passwordEncoder.encode(password))
 				.role(Role.USER)
