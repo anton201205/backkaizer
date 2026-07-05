@@ -5,6 +5,7 @@ create table if not exists usuarios (
   email varchar(190) not null unique,
   password_hash varchar(100) not null,
   nombre varchar(100),
+  apellidos varchar(100),
   telefono varchar(20),
   direccion text,
   ciudad varchar(100),
