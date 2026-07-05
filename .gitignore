@@ -43,3 +43,18 @@ build/
 ### Archivos del Sistema Operativo ###
 .DS_Store
 Thumbs.db
+
+### Documentación (no necesaria en repo) ###
+*.docx
+*.pdf
+*.xlsx
+
+### Archivos Temporales ###
+*.tmp
+*.temp
+*.bak
+*.swp
+
+### Metals (IDE) ###
+.metals/
+.bloop/
