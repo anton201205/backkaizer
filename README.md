@@ -208,7 +208,7 @@ usuarios ──1:N── pedidos ──1:N── pedido_items ──N:1── pr
 ```
 
 **Tablas:**
-- `usuarios`: id, email (único), password_hash (BCrypt), nombre, telefono, direccion, ciudad, role (USER/ADMIN), created_at
+- `usuarios`: id, email (único), password_hash (BCrypt), nombre, apellidos, telefono, direccion, ciudad, role (USER/ADMIN), created_at
 - `productos`: id, nombre, descripcion, precio (>0), image_url, stock (>=0), created_at, updated_at
 - `pedidos`: id, usuario_id (FK), direccion_envio, nombre_comprador, telefono_comprador, estado (default CREADO), total (>=0), created_at
 - `pedido_items`: id, pedido_id (FK cascade), producto_id (FK restrict), cantidad (>0), precio_unitario (>0), subtotal (generada)

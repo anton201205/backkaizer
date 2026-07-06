@@ -78,7 +78,8 @@ usuarios ──1:N── pedidos ──1:N── pedido_items ──N:1── pr
 ```
 
 - **usuarios**: `id`, `email` (único), `password_hash` (BCrypt), `nombre`,
-  `telefono`, `direccion`, `ciudad`, `role` (`USER`/`ADMIN`), `created_at`.
+  `apellidos`, `telefono`, `direccion`, `ciudad`, `role` (`USER`/`ADMIN`),
+  `created_at`.
 - **productos**: `id`, `nombre`, `descripcion`, `precio` (>0), `image_url`,
   `stock` (>=0), `created_at`, `updated_at`. Índice por `nombre`.
 - **pedidos**: `id`, `usuario_id` (FK, `on delete set null`), `direccion_envio`,
@@ -139,7 +140,7 @@ Base URL en producción: `https://kaizer-back-1.onrender.com`
 
 | Método | Ruta | Auth | Descripción |
 |---|---|---|---|
-| POST | `/api/auth/register` | Público | Registro; devuelve `{ token }` |
+| POST | `/api/auth/register` | Público | Registro (`nombre`, `apellidos`, `email`, `password`); devuelve `{ token }` |
 | POST | `/api/auth/login` | Público | Login; devuelve `{ token }` |
 | GET | `/api/health` | Público | Health check / warm-up |
 | GET | `/api/productos` | Público | Lista de productos |
