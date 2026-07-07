@@ -7,8 +7,24 @@ import java.util.List;
 
 import com.example.Kaizer_Back.usuario.Usuario;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -29,15 +45,15 @@ public class Pedido {
 
     @Column(name = "direccion_envio", columnDefinition = "TEXT")
     private String direccionEnvio;
+@Transient
+public String getNombreComprador() {
+    return usuario != null ? usuario.getNombre() : null;
+}
 
-    // Snapshot del nombre y teléfono al momento de la compra para que los datos
-    // de facturación no cambien si el usuario actualiza su perfil después.
-    @Column(name = "nombre_comprador", length = 100)
-    private String nombreComprador;
-
-    @Column(name = "telefono_comprador", length = 20)
-    private String telefonoComprador;
-
+@Transient
+public String getTelefonoComprador() {
+    return usuario != null ? usuario.getTelefono() : null;
+}
     @Column(nullable = false, length = 30)
     private String estado;
 
