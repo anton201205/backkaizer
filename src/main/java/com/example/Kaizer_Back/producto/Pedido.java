@@ -19,7 +19,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -45,15 +44,11 @@ public class Pedido {
 
     @Column(name = "direccion_envio", columnDefinition = "TEXT")
     private String direccionEnvio;
-@Transient
-public String getNombreComprador() {
-    return usuario != null ? usuario.getNombre() : null;
-}
+    @Column(name = "nombre_comprador")
+    private String nombreComprador;
 
-@Transient
-public String getTelefonoComprador() {
-    return usuario != null ? usuario.getTelefono() : null;
-}
+    @Column(name = "telefono_comprador")
+    private String telefonoComprador;
     @Column(nullable = false, length = 30)
     private String estado;
 

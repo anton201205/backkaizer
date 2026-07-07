@@ -12,6 +12,8 @@
 - **Pool conexiones:** HikariCP
 - **Build:** Maven 3.14.1 (wrapper `mvnw`)
 - **Contenedor:** Docker (multi-stage, Temurin Alpine JDK/JRE 21)
+
+Note: The project requires Java 17 or newer to compile (records, pattern matching). The `Dockerfile` is configured to use Temurin 17.
 - **Integración externa:** Decolecta API (RENIEC/SUNAT)
 - **Tests:** JUnit 5, Mockito (16 tests unitarios/integración)
 
