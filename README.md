@@ -250,6 +250,25 @@ CORS_ALLOWED_ORIGINS=http://localhost:4200,http://localhost:5173
 DECOLECTA_TOKEN=tu-token-decolecta
 ```
 
+### Apply DB schema to Supabase / Postgres
+
+If your database is empty or missing tables/columns, run the SQL scripts in `sql/` against your Supabase/Postgres instance. You can use `psql` or the `supabase` CLI. Example using `psql`:
+
+```bash
+# Using a libpq URL
+PG_CONN="postgres://<user>:<pass>@<host>:<port>/<db>?sslmode=require" \
+   ./scripts/apply_schema.sh
+
+# Or set parts individually (PowerShell example):
+$env:PG_HOST = "db.host"
+$env:PG_USER = "postgres"
+$env:PG_DB = "postgres"
+$env:PGPASSWORD = "your-password"
+./scripts/apply_schema.sh
+```
+
+Do NOT run these scripts on a production database unless you know the contents; they are intended to initialize the schema for a new Supabase instance.
+
 Spring Boot detecta automáticamente `.env` (configurado en `application.properties`).
 
 ---
