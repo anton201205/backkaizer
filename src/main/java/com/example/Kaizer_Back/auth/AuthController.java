@@ -48,9 +48,9 @@ public class AuthController {
 
 	@PostMapping("/login")
 	public AuthResponse login(@Valid @RequestBody LoginRequest request) {
-		var authToken = new UsernamePasswordAuthenticationToken(request.email(), request.password());
+		var authToken = new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
 		authenticationManager.authenticate(authToken);
-		UserDetails userDetails = usuarioDetailsService.loadUserByUsername(request.email());
+		UserDetails userDetails = usuarioDetailsService.loadUserByUsername(request.getEmail());
 		return new AuthResponse(jwtService.generateToken(userDetails));
 	}
 }
