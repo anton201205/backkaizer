@@ -46,11 +46,11 @@ public class AuthController {
 		return new AuthResponse(jwtService.generateToken(userDetails));
 	}
 
-	@PostMapping("/login")
-	public AuthResponse login(@Valid @RequestBody LoginRequest request) {
-		var authToken = new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
-		authenticationManager.authenticate(authToken);
-		UserDetails userDetails = usuarioDetailsService.loadUserByUsername(request.getEmail());
-		return new AuthResponse(jwtService.generateToken(userDetails));
-	}
+@PostMapping("/login")
+public AuthResponse login(@Valid @RequestBody LoginRequest request) {
+    var authToken = new UsernamePasswordAuthenticationToken(request.email(), request.password());
+    authenticationManager.authenticate(authToken);
+    UserDetails userDetails = usuarioDetailsService.loadUserByUsername(request.email());
+    return new AuthResponse(jwtService.generateToken(userDetails));
+}
 }
