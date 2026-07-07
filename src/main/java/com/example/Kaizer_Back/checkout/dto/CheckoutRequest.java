@@ -2,6 +2,7 @@ package com.example.Kaizer_Back.checkout.dto;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -10,10 +11,9 @@ import jakarta.validation.constraints.Size;
 public class CheckoutRequest {
 
 	@NotEmpty
+	@Valid
 	private List<Item> items;
 
-	// Dirección de envío ingresada en el formulario de checkout.
-	// Si no se envía, el servicio usa la guardada en el perfil del usuario.
 	@Size(max = 255)
 	private String direccionEnvio;
 
@@ -33,10 +33,11 @@ public class CheckoutRequest {
 		this.direccionEnvio = direccionEnvio;
 	}
 
-	public static class Item {
+public static class Item {
 		@NotNull
 		private Long productId;
 
+		@NotNull
 		@Positive
 		private Integer quantity;
 

@@ -14,13 +14,13 @@ public class ApiExceptionHandler {
 	}
 
 	// Maneja las violaciones de @Pattern, @NotBlank, etc. en path variables y params
-	@ExceptionHandler(ConstraintViolationException.class)
-	public ResponseEntity<String> handleConstraintViolation(ConstraintViolationException ex) {
-		String mensaje = ex.getConstraintViolations().stream()
-				.map(cv -> cv.getMessage())
-				.findFirst()
-				.orElse("Parámetro inválido");
-		return ResponseEntity.badRequest().body(mensaje);
-	}
+@ExceptionHandler(org.springframework.web.bind.MethodArgumentNotValidException.class)
+public ResponseEntity<String> handleValidation(org.springframework.web.bind.MethodArgumentNotValidException ex) {
+	String mensaje = ex.getBindingResult().getFieldErrors().stream()
+			.map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
+			.findFirst()
+			.orElse("Datos inválidos");
+	return ResponseEntity.badRequest().body(mensaje);
+}
 }
 

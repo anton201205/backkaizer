@@ -17,21 +17,21 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
 
-	private final UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
 
-	public UsuarioController(UsuarioService usuarioService) {
-		this.usuarioService = usuarioService;
-	}
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
 
-	@GetMapping("/perfil")
-	public UsuarioProfileResponse obtenerPerfil(@AuthenticationPrincipal UsuarioPrincipal principal) {
-		return usuarioService.obtenerPerfil(principal.getId());
-	}
+    @GetMapping("/perfil")
+    public UsuarioProfileResponse obtenerPerfil(@AuthenticationPrincipal UsuarioPrincipal principal) {
+        return usuarioService.obtenerPerfil(principal.getId());
+    }
 
-	@PutMapping("/perfil")
-	public UsuarioProfileResponse actualizarPerfil(
-			@AuthenticationPrincipal UsuarioPrincipal principal,
-			@Valid @RequestBody UsuarioProfileRequest request) {
-		return usuarioService.actualizarPerfil(principal.getId(), request);
-	}
+    @PutMapping("/perfil")
+    public UsuarioProfileResponse actualizarPerfil(
+            @AuthenticationPrincipal UsuarioPrincipal principal,
+            @Valid @RequestBody UsuarioProfileRequest request) {
+        return usuarioService.actualizarPerfil(principal.getId(), request);
+    }
 }

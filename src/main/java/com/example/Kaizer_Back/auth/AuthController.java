@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Kaizer_Back.auth.dto.AuthRequest;
 import com.example.Kaizer_Back.auth.dto.AuthResponse;
+import com.example.Kaizer_Back.auth.dto.LoginRequest;
 import com.example.Kaizer_Back.usuario.UsuarioService;
 
 import jakarta.validation.Valid;
@@ -40,13 +41,13 @@ public class AuthController {
 	@PostMapping("/register")
 	@ResponseStatus(HttpStatus.CREATED)
 	public AuthResponse register(@Valid @RequestBody AuthRequest request) {
-		usuarioService.registrar(request.nombre(), request.apellidos(), request.email(), request.password());
+		usuarioService.registrar(request.nombre(), request.email(), request.password());
 		UserDetails userDetails = usuarioDetailsService.loadUserByUsername(request.email());
 		return new AuthResponse(jwtService.generateToken(userDetails));
 	}
 
 	@PostMapping("/login")
-	public AuthResponse login(@Valid @RequestBody AuthRequest request) {
+	public AuthResponse login(@Valid @RequestBody LoginRequest request) {
 		var authToken = new UsernamePasswordAuthenticationToken(request.email(), request.password());
 		authenticationManager.authenticate(authToken);
 		UserDetails userDetails = usuarioDetailsService.loadUserByUsername(request.email());

@@ -19,6 +19,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -44,11 +45,19 @@ public class Pedido {
 
     @Column(name = "direccion_envio", columnDefinition = "TEXT")
     private String direccionEnvio;
-    @Column(name = "nombre_comprador")
-    private String nombreComprador;
 
-    @Column(name = "telefono_comprador")
-    private String telefonoComprador;
+    // No son columnas: la BD no las tiene. Se derivan en vivo desde la relación
+    // con Usuario, ya que el checkout siempre requiere login.
+    @Transient
+    public String getNombreComprador() {
+        return usuario != null ? usuario.getNombre() : null;
+    }
+
+    @Transient
+    public String getTelefonoComprador() {
+        return usuario != null ? usuario.getTelefono() : null;
+    }
+
     @Column(nullable = false, length = 30)
     private String estado;
 

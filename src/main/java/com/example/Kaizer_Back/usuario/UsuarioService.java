@@ -21,24 +21,22 @@ public class UsuarioService {
 		this.usuarioRepository = usuarioRepository;
 		this.passwordEncoder = passwordEncoder;
 	}
-
 	@Transactional(rollbackFor = Exception.class)
-	public Usuario registrar(String nombre, String apellidos, String email, String password) {
-		if (usuarioRepository.existsByEmail(email)) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, "Email ya registrado");
-		}
-
-		Usuario usuario = Usuario.builder()
-				.nombre(nombre)
-				.apellidos(apellidos)
-				.email(email)
-				.passwordHash(passwordEncoder.encode(password))
-				.role(Role.USER)
-				.createdAt(OffsetDateTime.now())
-				.build();
-
-		return usuarioRepository.save(usuario);
+public Usuario registrar(String nombre, String email, String password) {
+	if (usuarioRepository.existsByEmail(email)) {
+		throw new ResponseStatusException(HttpStatus.CONFLICT, "Email ya registrado");
 	}
+
+	Usuario usuario = Usuario.builder()
+			.nombre(nombre)
+			.email(email)
+			.passwordHash(passwordEncoder.encode(password))
+			.role(Role.USER)
+			.createdAt(OffsetDateTime.now())
+			.build();
+
+	return usuarioRepository.save(usuario);
+}
 
 	public UsuarioProfileResponse obtenerPerfil(Long userId) {
 		Usuario usuario = usuarioRepository.findById(userId)
@@ -56,7 +54,7 @@ public class UsuarioService {
 		if (request.nombre() != null) usuario.setNombre(request.nombre());
 		if (request.telefono() != null) usuario.setTelefono(request.telefono());
 		if (request.direccion() != null) usuario.setDireccion(request.direccion());
-		if (request.ciudad() != null) usuario.setCiudad(request.ciudad());
+		if (request.distrito() != null) usuario.setDistrito(request.distrito());
 
 		return UsuarioProfileResponse.from(usuarioRepository.save(usuario));
 	}

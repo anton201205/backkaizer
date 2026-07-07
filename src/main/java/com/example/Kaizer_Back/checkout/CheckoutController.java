@@ -19,14 +19,11 @@ public class CheckoutController {
 	public CheckoutController(CheckoutService checkoutService) {
 		this.checkoutService = checkoutService;
 	}
-
-	@PostMapping("/api/checkout")
-	public CheckoutResponse checkout(
-			// El endpoint es público; principal es null si el usuario no está autenticado.
-			@AuthenticationPrincipal UsuarioPrincipal principal,
-			@Valid @RequestBody CheckoutRequest request) {
-		Long userId = principal != null ? principal.getId() : null;
-		return checkoutService.checkout(request, userId);
-	}
+@PostMapping("/api/checkout")
+public CheckoutResponse checkout(
+		@AuthenticationPrincipal UsuarioPrincipal principal,
+		@Valid @RequestBody CheckoutRequest request) {
+	return checkoutService.checkout(request, principal.getId());
+}
 }
 

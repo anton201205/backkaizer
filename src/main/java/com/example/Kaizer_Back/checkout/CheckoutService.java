@@ -34,64 +34,56 @@ public class CheckoutService {
 	// rollbackFor = Exception.class garantiza rollback también ante excepciones checked
 	// (ej. fallo de red al persistir), no solo RuntimeException como hace el default.
 	@Transactional(rollbackFor = Exception.class)
-	public CheckoutResponse checkout(CheckoutRequest request, Long userId) {
-		// Crea pedido (orden) y aplica descuento de stock con bloqueo pesimista.
-		// Esto mitiga race conditions cuando múltiples compras intentan tomar el mismo stock.
-		Pedido pedido = Pedido.builder().estado("CREADO").build();
+public CheckoutResponse checkout(CheckoutRequest request, Long userId) {
+    if (userId == null) {
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Debes iniciar sesión para completar la compra");
+    }
 
-		if (userId != null) {
-			// findById en lugar de getReferenceById porque necesitamos los datos del perfil
-			// para generar el snapshot de facturación (nombre, teléfono, dirección).
-			Usuario usuario = usuarioRepository.findById(userId)
-					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+    Usuario usuario = usuarioRepository.findById(userId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
 
-			pedido.setUsuario(usuario);
-			pedido.setNombreComprador(usuario.getNombre());
-			pedido.setTelefonoComprador(usuario.getTelefono());
+    Pedido pedido = Pedido.builder()
+            .estado("CREADO")
+            .usuario(usuario)
+            .build();
 
-			// Dirección: prioriza lo enviado en el request; si no viene, usa la del perfil.
-			String direccion = request.getDireccionEnvio() != null
-					? request.getDireccionEnvio()
-					: usuario.getDireccion();
-			pedido.setDireccionEnvio(direccion);
-		} else if (request.getDireccionEnvio() != null) {
-			pedido.setDireccionEnvio(request.getDireccionEnvio());
-		}
+    String direccion = request.getDireccionEnvio() != null
+            ? request.getDireccionEnvio()
+            : usuario.getDireccion();
+    pedido.setDireccionEnvio(direccion);
 
-		BigDecimal total = BigDecimal.ZERO;
+    BigDecimal total = BigDecimal.ZERO;
 
-		for (CheckoutRequest.Item item : request.getItems()) {
-			Long productId = item.getProductId();
-			int quantity = item.getQuantity();
+    for (CheckoutRequest.Item item : request.getItems()) {
+        Long productId = item.getProductId();
+        int quantity = item.getQuantity();
 
-			Producto producto = productoRepository.findByIdForUpdate(productId)
-					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no existe: " + productId));
+        Producto producto = productoRepository.findByIdForUpdate(productId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no existe: " + productId));
 
-			int actual = producto.getStock() == null ? 0 : producto.getStock();
-			if (actual < quantity) {
-				throw new StockInsuficienteException(productId, actual, quantity);
-			}
+        int actual = producto.getStock() == null ? 0 : producto.getStock();
+        if (actual < quantity) {
+            throw new StockInsuficienteException(productId, actual, quantity);
+        }
 
-			// Descontar stock
-			producto.setStock(actual - quantity);
+        producto.setStock(actual - quantity);
 
-			// Registrar item
-			PedidoItem pedidoItem = PedidoItem.builder()
-					.pedido(pedido)
-					.producto(producto)
-					.cantidad(quantity)
-					.precioUnitario(producto.getPrecio())
-					.build();
+        PedidoItem pedidoItem = PedidoItem.builder()
+                .pedido(pedido)
+                .producto(producto)
+                .cantidad(quantity)
+                .precioUnitario(producto.getPrecio())
+                .build();
 
-			pedido.getItems().add(pedidoItem);
+        pedido.getItems().add(pedidoItem);
 
-			total = total.add(producto.getPrecio().multiply(BigDecimal.valueOf(quantity)));
-		}
+        total = total.add(producto.getPrecio().multiply(BigDecimal.valueOf(quantity)));
+    }
 
-		pedido.setTotal(total);
+    pedido.setTotal(total);
 
-		Pedido saved = pedidoRepository.save(pedido);
-		return new CheckoutResponse(saved.getId(), saved.getTotal());
-	}
+    Pedido saved = pedidoRepository.save(pedido);
+    return new CheckoutResponse(saved.getId(), saved.getTotal());
+}
 }
 

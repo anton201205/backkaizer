@@ -8,7 +8,8 @@ public record UsuarioProfileResponse(
 		String nombre,
 		String telefono,
 		String direccion,
-		String ciudad
+		String distrito,
+		String dni
 ) {
 	public static UsuarioProfileResponse from(Usuario u) {
 		return new UsuarioProfileResponse(
@@ -17,7 +18,8 @@ public record UsuarioProfileResponse(
 				u.getNombre(),
 				u.getTelefono(),
 				u.getDireccion(),
-				u.getCiudad()
+				u.getDistrito(),
+				u.getDni()
 		);
 	}
 }
